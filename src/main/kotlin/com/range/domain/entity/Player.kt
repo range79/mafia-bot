@@ -1,7 +1,12 @@
-package com.range.domain
+package com.range.domain.entity
 
 import com.range.enums.GameRole
-import jakarta.persistence.*
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.ManyToMany
+import jakarta.persistence.Table
 import java.util.UUID
 
 @Entity

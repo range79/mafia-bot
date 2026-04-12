@@ -23,6 +23,7 @@ dependencies {
     ksp("io.micronaut.data:micronaut-data-processor")
 
     ksp("io.micronaut.serde:micronaut-serde-processor")
+    implementation("net.dv8tion:JDA:6.4.1")
     implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("io.micronaut.serde:micronaut-serde-jackson")
