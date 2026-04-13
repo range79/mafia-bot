@@ -1,4 +1,4 @@
-package com.range.mafiabot2
+package com.range.mafiabot
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
