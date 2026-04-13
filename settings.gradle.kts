@@ -1,2 +1,1 @@
-rootProject.name = "mafiabot-2"
-
+rootProject.name = "MafiaBot2"

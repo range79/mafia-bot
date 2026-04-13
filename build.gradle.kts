@@ -1,91 +1,55 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.9.25"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.9.25"
-    id("org.jetbrains.kotlin.plugin.jpa") version "1.9.25"
-    id("com.google.devtools.ksp") version "1.9.25-1.0.20"
-    id("io.micronaut.application") version "4.6.2"
-    id("com.gradleup.shadow") version "8.3.9"
-    id("io.micronaut.test-resources") version "4.6.2"
-    id("io.micronaut.aot") version "4.6.2"
+    kotlin("jvm") version "2.2.21"
+    kotlin("plugin.spring") version "2.2.21"
+    id("org.springframework.boot") version "4.0.5"
+    id("io.spring.dependency-management") version "1.1.7"
+    id("org.hibernate.orm") version "7.2.7.Final"
+    id("org.graalvm.buildtools.native") version "0.11.5"
+    kotlin("plugin.jpa") version "2.2.21"
 }
 
-version = "0.1"
 group = "com.range"
+version = "0.0.1-SNAPSHOT"
+description = "MafiaBot2"
 
-
-val kotlinVersion = project.properties.get("kotlinVersion")
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 
 repositories {
     mavenCentral()
 }
 
 dependencies {
-    ksp("io.micronaut.data:micronaut-data-processor")
-
-    ksp("io.micronaut.serde:micronaut-serde-processor")
-    implementation("net.dv8tion:JDA:6.4.1")
-    implementation("io.micronaut.data:micronaut-data-hibernate-jpa")
-    implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
-    implementation("io.micronaut.serde:micronaut-serde-jackson")
-    implementation("io.micronaut.sql:micronaut-jdbc-hikari")
-    implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
-    runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
     runtimeOnly("org.postgresql:postgresql")
-    runtimeOnly("org.slf4j:slf4j-simple")
-    testImplementation("io.micronaut:micronaut-http-client")
+    testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
-
-
-application {
-    mainClass = "com.range.ApplicationKt"
-}
-
-java {
-    sourceCompatibility = JavaVersion.toVersion("21")
-}
-
-
-
-
-graalvmNative.toolchainDetection = false
-
-
-
-
-
-micronaut {
-    runtime("NONE")
-    testRuntime("junit5")
-    processing {
-        incremental(true)
-        annotations("com.range.*")
+kotlin {
+    compilerOptions {
+        freeCompilerArgs.addAll("-Xjsr305=strict", "-Xannotation-default-target=param-property")
     }
-    aot {
-        // Please review carefully the optimizations enabled below
-        // Check https://micronaut-projects.github.io/micronaut-aot/latest/guide/ for more details
-        optimizeServiceLoading = false
-        convertYamlToJava = false
-        precomputeOperations = true
-        cacheEnvironment = true
-        optimizeClassLoading = true
-        deduceEnvironment = true
-        optimizeNetty = false
-        replaceLogbackXml = true
+}
+
+hibernate {
+    enhancement {
+        enableAssociationManagement = true
     }
-
 }
 
-
-tasks.named<io.micronaut.gradle.docker.NativeImageDockerfile>("dockerfileNative") {
-    jdkVersion = "21"
+allOpen {
+    annotation("jakarta.persistence.Entity")
+    annotation("jakarta.persistence.MappedSuperclass")
+    annotation("jakarta.persistence.Embeddable")
 }
 
-
-
-
-
-
-
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
